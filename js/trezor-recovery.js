@@ -275,7 +275,11 @@
         $("#bip32_key_info_chain_code").val('' + byteArrayToHexString(bip32_source_key.chain_code));
 
         if( bip32_source_key.has_private_key ) {
-            var bytes = [key_coin.private_prefix].concat(bip32_source_key.eckey.priv.toByteArrayUnsigned()).concat([1]);
+            var privkeyBytes = bip32_source_key.eckey.priv.toByteArrayUnsigned();
+            while (privkeyBytes.length < 32) {
+                privkeyBytes.unshift(0);
+            }
+            var bytes = [key_coin.private_prefix].concat(privkeyBytes).concat([1]);
             var checksum = Crypto.SHA256(Crypto.SHA256(bytes, {asBytes: true}), {asBytes: true}).slice(0, 4);
             $("#bip32_key_info_key").val(Bitcoin.Base58.encode(bytes.concat(checksum)));
 
@@ -339,7 +343,11 @@
         if( result.has_private_key ) {
             $("#derived_private_key").val(result.extended_private_key_string("base58"));
 
-            var bytes = [key_coin.private_prefix].concat(result.eckey.priv.toByteArrayUnsigned()).concat([1]);
+            var privkeyBytes = result.eckey.priv.toByteArrayUnsigned();
+            while (privkeyBytes.length < 32) {
+                privkeyBytes.unshift(0);
+            }
+            var bytes = [key_coin.private_prefix].concat(privkeyBytes).concat([1]);
             var checksum = Crypto.SHA256(Crypto.SHA256(bytes, {asBytes: true}), {asBytes: true}).slice(0, 4);
             $("#derived_private_key_wif").val(Bitcoin.Base58.encode(bytes.concat(checksum)))
         } else {
