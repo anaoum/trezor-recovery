@@ -141,7 +141,7 @@
     function onCalculateBIP39Clicked() {
         var mnemonic = $("#bip32_source_mnemonic").val();
         var passphrase = $("#bip32_source_passphrase").val();
-        bip32_passphrase_hash = CryptoJS.PBKDF2(mnemonic, "mnemonic" + passphrase, { keySize: 512/32, iterations: 2048, hasher: CryptoJS.algo.SHA512 }).toString();
+        bip32_passphrase_hash = CryptoJS.PBKDF2(mnemonic.normalize('NFKD'), "mnemonic" + passphrase.normalize('NFKD'), { keySize: 512/32, iterations: 2048, hasher: CryptoJS.algo.SHA512 }).toString();
         updatePassphraseHash();
     }
 
